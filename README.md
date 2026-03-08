@@ -125,3 +125,9 @@ To apply terraform configuration execute the following command:
 ```bash
 terraform apply -auto-approve
 ```
+
+To destroy all created resources execute the following command:
+> WARNING: All resources and data will be permanently deleted without possibility of recovery
+```bash
+terraform destroy
+```
