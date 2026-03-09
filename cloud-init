@@ -1,0 +1,15 @@
+#cloud-config
+users:
+- name: ubuntu
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  shell: /bin/bash
+  ssh_authorized_keys:
+    - ${public-ssh-key}
+write_files:
+  - path: /usr/local/etc/install.sh
+    permissions: "755"
+    content: |
+      ${install-script}
+runcmd:
+  - wget -O - https://monitoring.api.cloud.yandex.net/monitoring/v2/unifiedAgent/config/install.sh | bash
+  - /usr/local/etc/install.sh
