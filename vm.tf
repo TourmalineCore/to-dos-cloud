@@ -50,7 +50,11 @@ resource "yandex_compute_instance" "vm" {
     // Install Unified Agent for monitoring
     // https://yandex.cloud/ru/docs/monitoring/concepts/data-collection/unified-agent/installation#setup
     install-unified-agent = 1
-    user-data = "#cloud-config\nusers:\n- name: ubuntu\n  sudo: ALL=(ALL) NOPASSWD:ALL\n  shell: /bin/bash\n  ssh_authorized_keys:\n  - ssh-ed25519  ${file(format("./%s-ssh.pub", local.resource_name_prefix))}\nruncmd:\n  - wget -O - https://monitoring.api.cloud.yandex.net/monitoring/v2/unifiedAgent/config/install.sh | bash"
+    user-data = templatefile("cloud-init", {
+      public-ssh-key = "${file(format("./%s-ssh.pub", local.resource_name_prefix))}"
+      // indent is needed to properly paste script in cloud-init
+      install-script = indent(6, file("script.sh"))
+    })
   }
   
   labels = {
